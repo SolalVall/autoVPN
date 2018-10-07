@@ -1,0 +1,2 @@
+[vpn]
+vps ansible_connection=ssh ansible_user=zyker
