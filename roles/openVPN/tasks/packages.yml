@@ -1,0 +1,15 @@
+--- 
+- name: PACKAGES - Install EPEL repository and openVPN necessaries packages
+  yum:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - epel-release
+    - openvpn
+    - easy-rsa
+    - python-pip
+
+- name: PACKAGES - Remote hosts need a Python package named pexpect for a specific Ansible task
+  pip:
+    name: pexpect
+  

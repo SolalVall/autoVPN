@@ -1,0 +1,23 @@
+--- 
+# Made for Easy-rsa 3
+- name: EASY-RSA - Check if PKI already exists
+  stat:
+    path: "{{ lookup('env','HOME') }}/pki"
+  register: pki
+
+- name: EASY-RSA - Init PKI if doesn't exist
+  command: "{{ easy_rsa_script }} init-pki"
+  when: not pki.stat.exists
+
+- name: EASY-RSA - Remove existing PKI and create a new one IF pki_suppr variable is set to yes
+  expect:
+    command: "{{ easy_rsa_script }} init-pki"
+    responses:
+      'Confirm removal:': "{{ easy_rsa_pki_suppr }}"
+  when: pki.stat.exists and pki_suppr == 'yes'
+
+- name: EASY-RSA - Build certificate authority
+  expect:
+    command: "{{ easy_rsa_script }} build-ca nopass"
+    responses:
+      'Common Name (eg: your user, host, or server name) [Easy-RSA CA]:': "{{ ansible_hostname}}"

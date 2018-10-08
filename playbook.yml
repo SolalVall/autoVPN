@@ -1,5 +1,7 @@
 ---
 - hosts: vpn
-  tasks:
-    - debug: var=ansible_all_ipv4_addresses
-    - debug: var=ansible_default_ipv4.address
+  become: yes
+  vars:
+    pki_suppr: "{{ easy_rsa_pki_suppr}}"
+  roles:
+    - openVPN
