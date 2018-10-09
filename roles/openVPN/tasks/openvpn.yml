@@ -1,0 +1,14 @@
+---
+- name: VPN - Copy CA,certificates and keys in Openvpn server conf location
+  copy:
+    src: "{{ item }}"
+    dest: "{{ openvpn_config_server_path }}"
+    owner: root
+    group: root
+    mode: 0600
+    remote_src: yes
+  loop:
+    - "{{ easy_rsa_pki_path }}/private/{{ openvpn_server_key }}"
+    - "{{ easy_rsa_pki_path }}/issued/{{ openvpn_server_crt }}"
+    - "{{ easy_rsa_pki_path }}/{{ openvpn_hmac_key }}"
+    - "{{ easy_rsa_pki_path }}/{{ openvpn_ca }}"

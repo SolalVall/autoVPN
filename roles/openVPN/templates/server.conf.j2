@@ -1,0 +1,23 @@
+#Set easy-rsa stuff for openvpn
+ca ca.crt
+cert {{ openvpn_server_crt}}
+key {{ openvpn_server_key }}
+dh dh.pem
+tls-crypt ta.key 
+
+user nobody
+group nobody
+
+#Parmeters for better security
+cipher AES-256-CBC
+auth SHA512
+tls-version-min 1.2
+tls-cipher TLS-DHE-RSA-WITH-AES-256-GCM-SHA384:TLS-DHE-RSA-WITH-AES-128-GCM-SHA256:TLS-DHE-RSA-WITH-AES-256-CBC-SHA:TLS-DHE-RSA-WITH-CAMELLIA-256-CBC-SHA:TLS-DHE-RSA-WITH-AES-128-CBC-SHA:TLS-DHE-RSA-WITH-CAMELLIA-128-CBC-SHA
+
+#Enabling compression for best performance
+compress lz4-v2
+push "compress lz4-v2"
+
+#Use server as the default gateway for user (In fact by default it's only the openVPN traffic not web for exemple)
+push "redirect-gateway def1 bypass-dhcp"
+
