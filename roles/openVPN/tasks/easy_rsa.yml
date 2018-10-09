@@ -16,8 +16,23 @@
       'Confirm removal:': "{{ easy_rsa_pki_suppr }}"
   when: pki.stat.exists and pki_suppr == 'yes'
 
-- name: EASY-RSA - Build certificate authority
+- name: EASY-RSA - Copy vars template for necessaries CA variables 
+  template:
+    src: vars.j2
+    dest: "{{ easy_rsa_base_path }}/vars"
+    owner: root
+    group: root
+    mode: '0644'
+  
+- name: EASY-RSA - Check if CA already exists
+  stat:
+    path: "{{ lookup('env','HOME') }}/pki/ca.crt"
+  register: ca
+
+- name: EASY-RSA - Build CA with vars file 
   expect:
-    command: "{{ easy_rsa_script }} build-ca nopass"
-    responses:
-      'Common Name (eg: your user, host, or server name) [Easy-RSA CA]:': "{{ ansible_hostname}}"
+    command: "{{ easy_rsa_script }} build-ca"
+    responses: 
+      'Enter PEM pass phrase:$': "{{ easy_rsa_ca_password }}"
+      'Verifying - Enter PEM pass phrase:$': "{{ easy_rsa_ca_password }}"
+  when: not ca.stat.exists

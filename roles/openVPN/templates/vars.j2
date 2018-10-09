@@ -1,22 +1,16 @@
 # Easy-RSA 3 parameter settings
-
-# Complain if a user tries to do this:
-if [ -z "$EASYRSA_CALLER" ]; then
-	echo "You appear to be sourcing an Easy-RSA 'vars' file." >&2
-	echo "This is no longer necessary and is disallowed. See the section called" >&2
-	echo "'How to use this file' near the top comments for more details." >&2
-	return 1
-fi
-
+set_var EASYRSA_REQ_CN "{{ key_cn }}"
 set_var EASYRSA_REQ_COUNTRY	"{{ key_country }}"
 set_var EASYRSA_REQ_PROVINCE	"{{ key_province }}"
 set_var EASYRSA_REQ_CITY	"{{ key_city }}"
 set_var EASYRSA_REQ_ORG	"{{ key_organisation }}"
 set_var EASYRSA_REQ_EMAIL	"{{ key_mail }}"
 set_var EASYRSA_REQ_OU		"{{ key_ou }}"
-
 set_var EASYRSA_KEY_SIZE	"{{ key_size }}"
 
-#set_var EASYRSA_CA_EXPIRE	3650
+#PKI DIR
+set_var EASYRSA_PKI "{{ lookup('env', 'HOME') }}/pki"
 
-#set_var EASYRSA_CERT_EXPIRE	1080
+#DON'T EDIT THIS PARAMETER
+#THROUGH THIS PARAMETER WE CAN AUTOMATIZE BUILD-CA PART
+set_var EASYRSA_BATCH "1"
