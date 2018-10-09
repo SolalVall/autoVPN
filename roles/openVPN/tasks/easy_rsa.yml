@@ -1,5 +1,7 @@
 --- 
 # Made for Easy-rsa 3
+
+### Build PKI/Certificate Authority PART ###
 - name: EASY-RSA - Check if PKI already exists
   stat:
     path: "{{ lookup('env','HOME') }}/pki"
@@ -24,15 +26,38 @@
     group: root
     mode: '0644'
   
-- name: EASY-RSA - Check if CA already exists
+- name: EASY-RSA - Check if CA (Certificate Autority) already exists
   stat:
     path: "{{ lookup('env','HOME') }}/pki/ca.crt"
   register: ca
 
-- name: EASY-RSA - Build CA with vars file 
+- name: EASY-RSA - Build CA (Certificate Authority) with vars file 
   expect:
     command: "{{ easy_rsa_script }} build-ca"
     responses: 
       'Enter PEM pass phrase:$': "{{ easy_rsa_ca_password }}"
       'Verifying - Enter PEM pass phrase:$': "{{ easy_rsa_ca_password }}"
   when: not ca.stat.exists
+  
+### Generate server keys ###
+- name: EASY-RSA - Generate server keys (crt,req,key)
+  expect:
+    command: "{{ easy_rsa_script }} build-server-full {{ ansible_hostname }} nopass"
+    responses:
+      'Enter pass phrase for .*key:$': "{{ easy_rsa_ca_password }}"
+    creates: "{{ lookup('env', 'HOME') }}/pki/reqs/{{ ansible_hostname }}.req"
+
+### Security Part: Build Diffie-hellman (For TLS purpose) and HMAC key ###
+- name: EASY-RSA - (TAKE TIME) Create Diffie-Hellman pem
+  openssl_dhparam:
+    path: "{{ openvpn_config_server_path }}/dh.pem"
+    size: 2048
+
+- name: EASY-RSA - Verify if HMAC key exists (ta)
+  stat:
+    path: "{{ lookup('env', 'HOME')}}/pki/ta.key"
+  register: hmac
+
+- name: EASY-RSA - Create HMAC Key
+  command: "openvpn --genkey --secret {{ lookup('env', 'HOME')}}/pki/ta.key"
+  when: not hmac.stat.exists

@@ -1,5 +1,7 @@
 #OpenVPN
 openvpn_base_path: "/etc/openvpn"
+openvpn_config_server_path: "{{ openvpn_base_path }}/server"
+openvpn_config_client_path: "{{ openvpn_base_path }}/client"
 
 
 #Easy-rsa
@@ -9,7 +11,7 @@ easy_rsa_script: "{{ easy_rsa_base_path }}/easyrsa"
 easy_rsa_ca_password: "your_password"
 
 # CA Parameters
-key_cn: "{{ ansible_hostname }}"
+key_cn: "ca@{{ ansible_hostname }}"
 key_country: "US"
 key_province: "NY"
 key_city: "New York"
