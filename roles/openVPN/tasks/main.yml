@@ -2,5 +2,5 @@
 - block:
   #- include: packages.yml
   #- include: easy_rsa.yml
-  - include: openvpn.yml
+  - include: vpn.yml
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'

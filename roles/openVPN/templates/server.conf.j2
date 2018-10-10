@@ -5,9 +5,6 @@ key {{ openvpn_server_key }}
 dh dh.pem
 tls-crypt ta.key 
 
-user nobody
-group nobody
-
 #Parmeters for better security
 cipher AES-256-CBC
 auth SHA512
@@ -18,6 +15,10 @@ tls-cipher TLS-DHE-RSA-WITH-AES-256-GCM-SHA384:TLS-DHE-RSA-WITH-AES-128-GCM-SHA2
 compress lz4-v2
 push "compress lz4-v2"
 
-#Use server as the default gateway for user (In fact by default it's only the openVPN traffic not web for exemple)
+#PART ABOUT ROUTING TRAFFIC FROM CLIENT ON THE SERVER
+#Use server as the default gateway for our clients (In fact by default it's only the openVPN traffic not web for exemple)
 push "redirect-gateway def1 bypass-dhcp"
 
+#Because now the openvpn is the default gateway for our clients we need to use the local DNS of the server
+push "dhcp-option DNS {{ openvpn_first_dns }}"
+push "dhcp-option DNS {{ openvpn_second_dns }}"
