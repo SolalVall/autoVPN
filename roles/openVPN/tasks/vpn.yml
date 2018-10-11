@@ -16,7 +16,7 @@
 - name: VPN - Copy template for openvpn server conf
   template:
     src: server.conf.j2
-    dest: "{{ openvpn_config_server_path }}/server.conf"
+    dest: "{{ openvpn_base_path }}/server.conf"
     owner: root
     group: root
     mode: '0644'
@@ -31,7 +31,7 @@
 
 - name: VPN - Start openvpn service and at boot too
   service:
-    name: "openvpn-server@server.service"
+    name: "openvpn@server.service"
     state: started
     enabled: yes
 

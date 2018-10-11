@@ -48,7 +48,7 @@
     creates: "{{ lookup('env', 'HOME') }}/pki/reqs/{{ ansible_hostname }}.req"
 
 ### Security Part: Build Diffie-hellman (For TLS purpose) and HMAC key ###
-- name: EASY-RSA - (TAKE TIME) Create Diffie-Hellman pem
+- name: EASY-RSA - (CAN TAKE TIME) Create Diffie-Hellman pem
   openssl_dhparam:
     path: "{{ openvpn_config_server_path }}/dh.pem"
     size: 2048
