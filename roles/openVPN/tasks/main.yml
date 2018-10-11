@@ -2,5 +2,6 @@
 - block:
   #- include: packages.yml
   #- include: easy_rsa.yml
-  - include: vpn.yml
+  #- include: vpn.yml
+  - include: flux.yml
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'

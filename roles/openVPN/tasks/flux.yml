@@ -1,0 +1,16 @@
+---
+- name: FLUX - Allow VPN traffic with rule for NAT forwarding
+  iptables:
+    table: nat
+    chain: POSTROUTING
+    out_interface: eth0
+    source: "{{ openvpn_server_subnet }}"
+    jump: MASQUERADE
+    comment: Allow VPN trafic, NAT forwarding
+
+- name: FLUX - Open OpenVPN port
+  iptables:
+    chain: INPUT
+    protocol: UDP
+    destination_port: "{{ openvpn_port }}"
+    jump: ACCEPT

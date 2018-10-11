@@ -1,9 +1,9 @@
 #Basic conf openvpn
 dev tun
 proto udp
-port 1194
+port {{ openvpn_port }}
 keepalive 10 120
-max-clients 4
+max-clients {{ openvpn_max_clients_on_server }}
 persist-key
 persist-tun
 
@@ -26,7 +26,7 @@ push "compress lz4-v2"
 
 #Virtual subnet created by OpenVPN
 #The server wiil receive 10.8.0.1
-server 10.8.0.0 255.255.255.0
+server {{ openvpn_server_subnet }} 255.255.255.0
 
 #Use server as the default gateway for our clients (In fact by default it's only the openVPN traffic not web for exemple)
 push "redirect-gateway def1 bypass-dhcp"

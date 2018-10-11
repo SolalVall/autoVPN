@@ -8,8 +8,11 @@ openvpn_server_key: "{{ ansible_hostname }}.key"
 openvpn_server_crt: "{{ ansible_hostname }}.crt"
 openvpn_diffie_hellman_key: "dh.pem"
 openvpn_hmac_key: "ta.key"
+openvpn_port: 1194
+openvpn_max_clients_on_server: 4
 openvpn_first_dns: 8.8.4.4
 openvpn_second_dns: 8.8.8.8
+openvpn_server_subnet: 10.0.8.0 
 
 #Easy-rsa
 easy_rsa_pki_suppr: "no"
