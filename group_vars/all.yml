@@ -13,6 +13,9 @@ openvpn_max_clients_on_server: 4
 openvpn_first_dns: 8.8.4.4
 openvpn_second_dns: 8.8.8.8
 openvpn_server_subnet: 10.0.8.0 
+openvpn_route: 
+  - { subnet: 192.168.0.0, netmask: 255.255.255.0 }
+  - { subnet: 192.168.1.0, netmask: 255.255.255.0 }
 
 #Easy-rsa
 easy_rsa_pki_suppr: "no"

@@ -1,4 +1,67 @@
 ---
+- name: FLUX - Flush all existing firwall rules
+  iptables:
+    flush: true
+
+- name: FLUX - Setting default Filter policy
+  iptables:
+    chain: "{{ item }}"
+    policy: DROP
+  loop:
+    - INPUT
+    - OUTPUT
+    - FORWARD
+
+- name: FLUX - Allow unlimited traffic on loopback (INPUT)
+  iptables:
+    action: append
+    chain: INPUT
+    in_interface: lo
+    jump: ACCEPT
+    
+- name: FLUX - Allow unlimited traffic on loopback (OUTPUT)
+  iptables:
+    action: append
+    chain: OUTPUT
+    out_interface: lo
+    jump: ACCEPT
+
+- name: FLUX - Accept outbound traffic on primary interface
+  iptables:
+    chain: OUTPUT
+    destination: 0.0.0.0
+    out_interface: eth0
+    jump: ACCEPT
+
+- name: FLUX - Accept inbound TCP packets
+  iptables:
+    chain: INPUT
+    in_interface: eth0
+    ctstate: "{{ item }}"
+    jump: ACCEPT
+  loop:
+    - ESTABLISHED
+    - RELATED
+
+- name: FLUX - Allow Incoming SSH
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: 22
+    cstate: NEW
+    source: 0.0.0.0
+    jump: ACCEPT
+
+
+- name: FLUX - Allow incoming OpenVPN
+  iptables:
+    chain: INPUT
+    protocol: udp
+    destination_port: "{{ openvpn_port }}"
+    cstate: NEW
+    source: 0.0.0.0
+    jump: ACCEPT
+
 - name: FLUX - Allow VPN traffic with rule for NAT forwarding
   iptables:
     table: nat
@@ -8,9 +71,12 @@
     jump: MASQUERADE
     comment: Allow VPN trafic, NAT forwarding
 
-- name: FLUX - Open OpenVPN port
+- name: FLUX - Allow TUN client interface connections to OpenVPN server
   iptables:
     chain: INPUT
-    protocol: UDP
-    destination_port: "{{ openvpn_port }}"
+    in_interface: tun0
     jump: ACCEPT
+
+
+
+####To BE CONTINUED
